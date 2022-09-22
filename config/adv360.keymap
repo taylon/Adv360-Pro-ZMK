@@ -29,7 +29,7 @@
     // Hold taps
     nht: numpad_layer_hold_tap {
       compatible = "zmk,behavior-hold-tap";
-      label = "HOMEROW_MODS";
+      label = "NUMPAD_LAYER_HOLD_TAP";
       #binding-cells = <2>;
       tapping-term-ms = <200>;
       quick_tap_ms = <175>;
@@ -72,7 +72,7 @@
 
     td_prn: tap_dance_parenthesis {
       compatible = "zmk,behavior-tap-dance";
-      label = "TAP_DANCE_CURLY_BRACKETS";
+      label = "TAP_DANCE_PARENTHESIS";
       #binding-cells = <0>;
       tapping-term-ms = <200>;
       bindings = <&kp LEFT_PARENTHESIS>, <&kp RIGHT_PARENTHESIS>;
