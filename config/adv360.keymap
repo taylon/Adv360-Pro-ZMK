@@ -4,58 +4,157 @@
 #include <dt-bindings/zmk/rgb.h>
 #include <dt-bindings/zmk/backlight.h>
 
-/ {
-    behaviors {
-      #include "macros.dtsi"
+// Layers
+#define DEFAULT 0
+#define NUMPAD 1
+#define SYMBOLS 2
+#define SETTINGS 3
 
-      hm: homerow_mods {
-          compatible = "zmk,behavior-hold-tap";
-          label = "HOMEROW_MODS";
-          #binding-cells = <2>;
-          tapping-term-ms = <200>;
-          quick_tap_ms = <175>;
-          flavor = "tap-preferred";
-          bindings = <&kp>, <&kp>;
-      };
+// Home Row Mods
+#define HM_A &gqt LEFT_GUI A
+#define HM_R &gqt LEFT_ALT R
+#define HM_S &gqt LEFT_CONTROL S
+
+#define HM_E &gqt LEFT_CONTROL E
+#define HM_I &gqt LEFT_ALT I
+#define HM_O &gqt LEFT_GUI O
+
+&mt {
+  retro-tap;
+};
+
+/ {
+  behaviors {
+    #include "macros.dtsi"
+
+    // Hold taps
+    nht: numpad_layer_hold_tap {
+      compatible = "zmk,behavior-hold-tap";
+      label = "NUMPAD_LAYER_HOLD_TAP";
+      tapping-term-ms = <200>;
+      #binding-cells = <2>;
+      quick_tap_ms = <175>;
+      flavor = "tap-preferred";
+      bindings = <&mo>, <&kp>;
+      hold-trigger-key-positions = <23 24 25 41 42 43 61 62 63 77 78 79>;
+
+      // &kp EQUAL &kp N1    &kp N2   &kp N3   &kp N4     &kp N5 &trans                                                                       &mo 3 &kp N6 &kp KP_NUM &kp KP_EQUAL &kp KP_DIVIDE &kp KP_MULTIPLY &kp MINUS
+      // &kp TAB   &kp Q     &kp W    &kp E    &kp R      &kp T  &none(20)                                                                        &none &kp Y  &kp KP_N7  &kp KP_N8    &kp KP_N9     &kp KP_MINUS    &kp BSLH
+      // &kp ESC   &kp A     &kp S    &kp D    &kp F      &kp G  &none(34)          &kp LCTRL &kp LALT             &kp LGUI  &kp RCTRL            &none &kp H  &kp KP_N4  &kp KP_N5    &kp KP_N6(43)     &kp KP_PLUS     &kp SQT
+      // &kp LSHFT &kp Z     &kp X    &kp C    &kp V      &kp B        &none    &none     &kp HOME &none &none &kp PG_UP &none     &none            &kp N  &kp KP_N1  &kp KP_N2    &kp KP_N3(63)     &kp KP_ENTER    &kp RSHFT
+      // &mo 2     &kp GRAVE &kp CAPS &kp LEFT &kp RIGHT (70)              &kp BKSP &kp DEL   &kp END              &kp PG_DN &kp ENTER &kp KP_N0               &kp UP     &kp DOWN(78)     &kp KP_DOT    &kp RBKT         &mo 2
     };
+
+    gqt: global-quick-tap {
+      compatible = "zmk,behavior-hold-tap";
+      label = "GLOBAL_QUICK_TAP";
+      tapping-term-ms = <200>;
+      #binding-cells = <2>;
+      flavor = "tap-preferred";
+      quick-tap-ms = <125>;
+      global-quick-tap;
+      bindings = <&kp>, <&kp>;
+    };
+
+    // I can get rid of this after I fix the muscle memory of pressing shift for _
+    umm: fix_underscore_muscle_memory {
+      compatible = "zmk,behavior-mod-morph";
+      label = "FIX_UNDERSCORE_MUSCLE_MEMORY";
+      #binding-cells = <0>;
+      bindings = <&kp UNDERSCORE>, <&none>;
+      mods = <MOD_LSFT>;
+    };
+
+    // Tap Dances
+    td_cc: tap_dance_copy_cut {
+      compatible = "zmk,behavior-tap-dance";
+      label = "TAP_DANCE_COPY_CUT";
+      tapping-term-ms = <200>;
+      #binding-cells = <0>;
+      bindings = <&kp LC(C)>, <&kp LC(X)>;
+    };
+
+    td_cbr: tap_dance_curly_braces {
+      compatible = "zmk,behavior-tap-dance";
+      label = "TAP_DANCE_CURLY_BRACES";
+      tapping-term-ms = <200>;
+      #binding-cells = <0>;
+      bindings = <&kp LEFT_BRACE>, <&kp RIGHT_BRACE>;
+    };
+
+    td_prn: tap_dance_parenthesis {
+      compatible = "zmk,behavior-tap-dance";
+      label = "TAP_DANCE_PARENTHESIS";
+      tapping-term-ms = <200>;
+      #binding-cells = <0>;
+      bindings = <&kp LEFT_PARENTHESIS>, <&kp RIGHT_PARENTHESIS>;
+    };
+
+    td_bkt: tap_dance_brakets {
+      compatible = "zmk,behavior-tap-dance";
+      label = "TAP_DANCE_BRACKETS";
+      tapping-term-ms = <200>;
+      #binding-cells = <0>;
+      bindings = <&kp LEFT_BRACKET>, <&kp RIGHT_BRACKET>;
+    };
+
+    td_dsq: tap_dance_double_single_quote {
+      compatible = "zmk,behavior-tap-dance";
+      label = "TAP_DANCE_DOUBLE_SINGLE_QUOTE";
+      tapping-term-ms = <200>;
+      #binding-cells = <0>;
+      bindings = <&kp DOUBLE_QUOTES>, <&kp SINGLE_QUOTE>;
+    };
+
+    td_shft: tap_dance_shift {
+      compatible = "zmk,behavior-tap-dance";
+      label = "TAP_DANCE_SHIFT";
+      tapping-term-ms = <200>;
+      #binding-cells = <0>;
+      bindings = <&sk LEFT_SHIFT>, <&caps_word>;
+    };
+  };
 
   keymap {
     compatible = "zmk,keymap";
 
     default_layer {
       bindings = <
-        &kp EQUAL &kp N1    &kp N2   &kp N3   &kp N4     &kp N5 &tog 1                                                                       &mo 3 &kp N6 &kp N7 &kp N8    &kp N9   &kp N0   &kp MINUS
-        &kp TAB   &kp Q     &kp W    &kp E    &kp R      &kp T  &kp KP_NUMBER_1                                                      &kp KP_NUMBER_3 &kp Y  &kp U  &kp I     &kp O    &kp P    &kp BSLH
-        &kp ESC   &kp A     &kp S    &kp D    &kp F      &kp G  &kp KP_NUMBER_2    &kp LCTRL &kp LALT                    &kp LGUI  &kp RCTRL                   &kp KP_NUMBER_4 &kp H  &kp J  &kp K     &kp L    &kp SEMI &kp SQT
-        &kp LSHFT &kp Z     &kp X    &kp C    &kp V      &kp B        &none     &none     &kp HOME &none &none &kp PG_UP &none     &none            &kp N  &kp M  &kp COMMA &kp DOT  &kp FSLH &kp RSHFT
-        &mo 2     &kp GRAVE &kp CAPS &kp LEFT &kp RIGHT               &kp BKSP  &kp DEL   &kp END              &kp PG_DN &kp ENTER &kp SPACE               &kp UP &kp DOWN  &kp LBKT &kp RBKT &mo 2
-        >;
+        &kp F11       &kp F1   &kp F2   &kp F3         &kp F4     &kp F5  &kp F8                                                                   &mo SETTINGS  &kp F10  &kp F9   &kp F6     &kp F12   &kp F13   &kp LC(LA(LEFT_GUI))
+        &kp DELETE    &kp Q    &kp W    &nht NUMPAD F  &kp P      &kp B   &kp F15                                                                  &kp F16       &kp J    &kp L    &kp U      &kp Y     &kp SEMI  &kp F17
+        &kp TAB       HM_A     HM_R     HM_S           &kp T      &kp G   &kp F18   &kp ESC   &kp C_PLAY_PAUSE         &kp LGUI       &kp ENTER    &kp F19       &kp M    &kp N    HM_E       HM_I      HM_O      &td_dsq
+        &kp KP_MINUS  &kp Z    &kp X    &kp C          &kp D      &kp V   &none     &none     &kp HOME   &none &none   &kp PAGE_UP    &none        &none         &kp K    &kp H    &kp COMMA  &kp DOT   &kp FSLH  &umm
+        &td_cc        &kp F20  &kp F21  &kp LEFT       &kp RIGHT          &kp BKSP  &td_shft  &kp END                  &kp PAGE_DOWN  &sl SYMBOLS  &kp SPACE              &kp UP   &kp DOWN   &kp F10   &kp F7    &kp F14
+      >;
     };
+
     keypad {
       bindings = <
-        &kp EQUAL &kp N1    &kp N2   &kp N3   &kp N4     &kp N5 &trans                                                                       &mo 3 &kp N6 &kp KP_NUM &kp KP_EQUAL &kp KP_DIVIDE &kp KP_MULTIPLY &kp MINUS
-        &kp TAB   &kp Q     &kp W    &kp E    &kp R      &kp T  &none                                                                        &none &kp Y  &kp KP_N7  &kp KP_N8    &kp KP_N9     &kp KP_MINUS    &kp BSLH
-        &kp ESC   &kp A     &kp S    &kp D    &kp F      &kp G  &none          &kp LCTRL &kp LALT             &kp LGUI  &kp RCTRL            &none &kp H  &kp KP_N4  &kp KP_N5    &kp KP_N6     &kp KP_PLUS     &kp SQT
-        &kp LSHFT &kp Z     &kp X    &kp C    &kp V      &kp B        &none    &none     &kp HOME &none &none &kp PG_UP &none     &none            &kp N  &kp KP_N1  &kp KP_N2    &kp KP_N3     &kp KP_ENTER    &kp RSHFT
-        &mo 2     &kp GRAVE &kp CAPS &kp LEFT &kp RIGHT               &kp BKSP &kp DEL   &kp END              &kp PG_DN &kp ENTER &kp KP_N0               &kp UP     &kp DOWN     &kp KP_DOT    &kp RBKT         &mo 2
+        &trans &trans &trans &trans &trans &trans &trans                                                    &trans     &trans  &trans   &trans   &trans     &trans  &trans
+        &trans &trans &trans &trans &trans &trans &trans                                                    &trans     &trans  &kp N7   &kp N8   &kp N9     &trans  &trans
+        &trans &trans &trans &trans &trans &trans &trans  &trans  &trans                 &trans  &kp ENTER  &trans     &trans  &kp N4   &kp N5   &kp N6     &trans  &trans
+        &trans &trans &trans &trans &trans &trans &none   &none   &trans   &none &none   &trans  &none      &none      &trans  &kp N1   &kp N2   &kp N3     &trans  &trans
+        &trans &trans &trans &trans &trans        &trans  &trans  &trans                 &trans  &trans     &kp SPACE          &kp N0   &kp DOT  &kp EQUAL  &trans  &trans
       >;
     };
-    fn {
+
+    symbols {
       bindings = <
-        &kp F1  &kp F2 &kp F3 &kp F4 &kp F5 &kp F6 &tog 1                                                          &mo 3 &kp F7  &kp F8 &kp F9 &kp F10 &kp F11 &kp F12
-        &trans  &trans &trans &trans &trans &trans  &none                                                          &none &trans  &trans &trans &trans  &trans  &trans
-        &trans  &trans &trans &trans &trans &trans  &none        &trans &trans             &trans &trans           &none &trans  &trans &trans &trans  &trans  &trans
-        &trans  &trans &trans &trans &trans &trans        &none  &none  &trans &none &none &trans &none  &none            &trans &trans &trans &trans  &trans  &trans
-        &trans  &trans &trans &trans &trans               &trans &trans &trans             &trans &trans &trans                  &trans &trans &trans  &trans  &trans
+        &trans  &trans       &trans           &trans         &trans         &trans        &trans                                                &trans &trans &trans &trans &trans &trans &trans
+        &trans  &kp PERCENT  &kp AT           &td_cbr        &kp DOLLAR     &kp PIPE      &trans                                                &trans &trans &trans &trans &trans &trans &trans
+        &trans  &kp HASH     &kp TILDE        &td_prn        &kp KP_EQUAL   &kp KP_PLUS   &trans  &trans  &trans                 &trans &trans  &trans &trans &trans &trans &trans &trans &trans
+        &trans  &kp CARET    &kp EXCLAMATION  &td_bkt        &kp AMPERSAND  &kp ASTERISK  &none   &none   &trans   &none &none   &trans &none   &none  &trans &trans &trans &trans &trans &trans
+        &trans  &trans       &trans           &kp BACKSLASH  &kp GRAVE                    &trans  &trans  &trans                 &trans &trans  &trans        &trans &trans &trans &trans &trans
       >;
     };
-    mod {
+
+    settings {
       bindings = <
-        &none &bt BT_SEL 0 &bt BT_SEL 1 &bt BT_SEL 2 &bt BT_SEL 3 &bt BT_SEL 4 &none                                                                                                  &trans        &bt BT_SEL 0 &bt BT_SEL 1 &bt BT_SEL 2 &bt BT_SEL 3 &bt BT_SEL 4 &none
-        &none &none        &none        &none        &none        &none        &bootloader                                                                                            &bootloader   &none        &none        &none        &none        &none        &none
-        &none &none        &none        &none        &none        &none        &rgb_ug RGB_MEFS_CMD 5    &bt BT_CLR &bt BT_CLR             &bt BT_CLR &bt BT_CLR         &rgb_ug RGB_MEFS_CMD 5    &none        &none        &none        &none        &none        &none
-        &none &none        &none        &none        &none        &none                   &none           &none      &none     &none &none &none      &none      &none                   &none        &none        &none        &none        &none        &none
-        &none &none        &none        &bl BL_INC   &bl BL_DEC                           &rgb_ug RGB_TOG &bl BL_TOG &none                 &none      &bl BL_TOG &rgb_ug RGB_TOG                      &bl BL_INC   &bl BL_DEC   &none        &none        &none
+        &none  &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_SEL 3  &bt BT_SEL 4 &none                                                                                    &trans                   &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_SEL 3  &bt BT_SEL 4  &none
+        &none  &none         &none         &none         &none         &none        &bootloader                                                                              &bootloader              &none         &none         &none         &none         &none         &none
+        &none  &none         &none         &none         &none         &none        &rgb_ug RGB_MEFS_CMD 5   &bt BT_CLR  &bt BT_CLR                 &bt BT_CLR  &bt BT_CLR   &rgb_ug RGB_MEFS_CMD 5   &none         &none         &none         &none         &none         &none
+        &none  &none         &none         &none         &none         &none        &none                    &none       &none        &none &none   &none       &none        &none                    &none         &none         &none         &none         &none         &none
+        &none  &none         &none         &bl BL_INC    &bl BL_DEC                 &rgb_ug RGB_TOG          &bl BL_TOG  &none                      &none       &bl BL_TOG   &rgb_ug RGB_TOG                        &bl BL_INC    &bl BL_DEC    &none         &none         &none
       >;
     };
   };

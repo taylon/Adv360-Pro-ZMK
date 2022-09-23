@@ -2,4 +2,4 @@
 
 set -e
 
-docker build --tag zmk .
+docker build --no-cache --tag zmk .
