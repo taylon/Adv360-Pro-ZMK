@@ -23,6 +23,10 @@
   retro-tap;
 };
 
+&sk {
+  quick-release;
+};
+
 / {
   behaviors {
     #include "macros.dtsi"
@@ -54,6 +58,35 @@
       quick-tap-ms = <125>;
       global-quick-tap;
       bindings = <&kp>, <&kp>;
+    };
+
+    // Macros
+    // This is a work around until https://github.com/zmkfirmware/zmk/issues/683 and https://github.com/zmkfirmware/zmk/pull/1114 gets fixed
+    ZMK_MACRO(macro_single_quote, 
+      wait-ms = <30>;
+      tap-ms = <40>;
+      bindings = <&macro_release &kp LEFT_SHIFT>, <&macro_tap &kp SINGLE_QUOTE>;
+    )
+
+    ZMK_MACRO(macro_equal_colon, 
+      wait-ms = <30>;
+      tap-ms = <40>;
+      bindings = <&macro_tap &kp COLON>, <&macro_tap &kp EQUAL>;
+    )
+
+    ZMK_MACRO(macro_minus_arrow, 
+      wait-ms = <30>;
+      tap-ms = <40>;
+      bindings = <&macro_tap &kp MINUS>, <&macro_tap &kp GREATER_THAN>;
+    )
+
+    // Mod-Morphs
+    quotes: modmorph_quotes {
+      compatible = "zmk,behavior-mod-morph";
+      label = "MODMORPH_QUOTES";
+      #binding-cells = <0>;
+      bindings = <&kp DOUBLE_QUOTES>, <&macro_single_quote>;
+      mods = <(MOD_LSFT)>;
     };
 
     // I can get rid of this after I fix the muscle memory of pressing shift for _
@@ -98,14 +131,6 @@
       bindings = <&kp LEFT_BRACKET>, <&kp RIGHT_BRACKET>;
     };
 
-    td_dsq: tap_dance_double_single_quote {
-      compatible = "zmk,behavior-tap-dance";
-      label = "TAP_DANCE_DOUBLE_SINGLE_QUOTE";
-      tapping-term-ms = <200>;
-      #binding-cells = <0>;
-      bindings = <&kp DOUBLE_QUOTES>, <&kp SINGLE_QUOTE>;
-    };
-
     td_shft: tap_dance_shift {
       compatible = "zmk,behavior-tap-dance";
       label = "TAP_DANCE_SHIFT";
@@ -122,7 +147,7 @@
       bindings = <
         &kp F11       &kp F1   &kp F2   &kp F3         &kp F4     &kp F5  &kp F8                                                                   &mo SETTINGS  &kp F10  &kp F9   &kp F6     &kp F12   &kp F13   &kp LC(LA(LEFT_GUI))
         &kp DELETE    &kp Q    &kp W    &nht NUMPAD F  &kp P      &kp B   &kp F15                                                                  &kp F16       &kp J    &kp L    &kp U      &kp Y     &kp SEMI  &kp F17
-        &kp TAB       HM_A     HM_R     HM_S           &kp T      &kp G   &kp F18   &kp ESC   &kp C_PLAY_PAUSE         &kp LGUI       &kp ENTER    &kp F19       &kp M    &kp N    HM_E       HM_I      HM_O      &td_dsq
+        &kp TAB       HM_A     HM_R     HM_S           &kp T      &kp G   &kp F18   &kp ESC   &kp C_PLAY_PAUSE         &kp LGUI       &kp ENTER    &kp F19       &kp M    &kp N    HM_E       HM_I      HM_O      &quotes
         &kp KP_MINUS  &kp Z    &kp X    &kp C          &kp D      &kp V   &none     &none     &kp HOME   &none &none   &kp PAGE_UP    &none        &none         &kp K    &kp H    &kp COMMA  &kp DOT   &kp FSLH  &umm
         &td_cc        &kp F20  &kp F21  &kp LEFT       &kp RIGHT          &kp BKSP  &td_shft  &kp END                  &kp PAGE_DOWN  &sl SYMBOLS  &kp SPACE              &kp UP   &kp DOWN   &kp F10   &kp F7    &kp F14
       >;
@@ -140,11 +165,11 @@
 
     symbols {
       bindings = <
-        &trans  &trans       &trans           &trans         &trans         &trans        &trans                                                &trans &trans &trans &trans &trans &trans &trans
-        &trans  &kp PERCENT  &kp AT           &td_cbr        &kp DOLLAR     &kp PIPE      &trans                                                &trans &trans &trans &trans &trans &trans &trans
-        &trans  &kp HASH     &kp TILDE        &td_prn        &kp KP_EQUAL   &kp KP_PLUS   &trans  &trans  &trans                 &trans &trans  &trans &trans &trans &trans &trans &trans &trans
-        &trans  &kp CARET    &kp EXCLAMATION  &td_bkt        &kp AMPERSAND  &kp ASTERISK  &none   &none   &trans   &none &none   &trans &none   &none  &trans &trans &trans &trans &trans &trans
-        &trans  &trans       &trans           &kp BACKSLASH  &kp GRAVE                    &trans  &trans  &trans                 &trans &trans  &trans        &trans &trans &trans &trans &trans
+        &trans  &trans       &trans              &macro_equal_colon  &trans         &trans        &trans                                                &trans &trans &trans &trans &trans &trans &trans
+        &trans  &kp PERCENT  &kp AT              &td_cbr             &kp DOLLAR     &kp PIPE      &trans                                                &trans &trans &trans &trans &trans &trans &trans
+        &trans  &kp HASH     &kp TILDE           &td_prn             &kp EQUAL      &kp PLUS      &trans  &trans  &trans                 &trans &trans  &trans &trans &trans &trans &trans &trans &trans
+        &trans  &kp CARET    &kp EXCLAMATION     &td_bkt             &kp AMPERSAND  &kp ASTERISK  &none   &none   &trans   &none &none   &trans &none   &none  &trans &trans &trans &trans &trans &trans
+        &trans  &trans       &macro_minus_arrow  &kp BACKSLASH       &kp GRAVE                    &trans  &trans  &trans                 &trans &trans  &trans        &trans &trans &trans &trans &trans
       >;
     };
 
