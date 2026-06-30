@@ -10,6 +10,7 @@
 #define DEFAULT 0
 #define NUMPAD  1
 #define SYMBOLS 2
+#define MOD     3
 
 // Home Row Mods
 #define HM_A &hml LEFT_GUI A
@@ -20,6 +21,20 @@
 #define HM_O &hmr LEFT_GUI O
 
 / {
+	macros {
+		arrow: arrow {
+			compatible = "zmk,behavior-macro";
+			#binding-cells = <0>;
+			bindings = <&macro_tap &kp MINUS &kp GREATER_THAN>;
+		};
+
+		colon_equal: colon_equal {
+			compatible = "zmk,behavior-macro";
+			#binding-cells = <0>;
+			bindings = <&macro_tap &kp COLON &kp EQUAL>;
+		};
+	};
+
 	behaviors {
 		#include "macros.dtsi"
 		#include "version.dtsi"
@@ -37,7 +52,7 @@
       hold-trigger-on-release;
 
 			// Right hand keys
-			hold-trigger-key-positions = <7 8 9 10 11 12 13 21 22 23 24 25 26 27 39 40 41 42 43 44 45 54 55 56 57 58 59 71 72 73 74 75>;
+			hold-trigger-key-positions = <7 8 9 10 11 12 13 21 22 23 24 25 26 27 38 39 40 41 42 43 44 45 54 55 56 57 58 59 71 72 73 74 75>;
     };
 
     hmr: homerow_mod_right {
@@ -52,8 +67,7 @@
       require-prior-idle-ms = <150>;
       hold-trigger-on-release;
 
-			// Left hand keys
-      hold-trigger-key-positions = <0 1 2 3 4 5 6 14 15 16 17 18 19 20 28 29 30 31 32 33 34 46 47 48 49 50 51 60 61 62 63 64>;
+      hold-trigger-key-positions = <0 1 2 3 4 5 6 14 15 16 17 18 19 20 28 29 30 31 32 33 34 38 46 47 48 49 50 51 60 61 62 63 64>;
     };
 
     dsq: double_single_quote {
@@ -62,6 +76,22 @@
       #binding-cells = <0>;
       bindings = <&kp DOUBLE_QUOTES>, <&kp SINGLE_QUOTE>;
       mods = <MOD_LSFT>;
+    };
+
+    td_ce: tap_dance_colon_equal {
+      compatible = "zmk,behavior-tap-dance";
+      label = "TAP_DANCE_COLON_EQUAL";
+      #binding-cells = <0>;
+      tapping-term-ms = <200>;
+      bindings = <&kp EQUAL>, <&colon_equal>;
+    };
+
+    td_cc: tap_dance_copy_cut {
+      compatible = "zmk,behavior-tap-dance";
+      label = "TAP_DANCE_COPY_CUT";
+      #binding-cells = <0>;
+      tapping-term-ms = <200>;
+      bindings = <&kp LC(C)>, <&kp LC(X)>;
     };
 
     td_cbr: tap_dance_curly_braces {
@@ -95,7 +125,6 @@
       tapping-term-ms = <200>;
       bindings = <&sk LEFT_SHIFT>, <&caps_word>;
     };
-
 	};
 
   keymap {
@@ -104,33 +133,33 @@
     default_layer {
       display-name = "Base";
       bindings = <
-        &kp EQUAL &kp N1    &kp N2   &kp N3   &kp N4     &kp N5 &tog 1                                                           &mo 3 &kp N6 &kp N7 &kp N8    &kp N9   &kp N0   &kp MINUS
-        &kp TAB   &kp Q     &kp W    &kp E    &kp R      &kp T  &none                                                            &none &kp Y  &kp U  &kp I     &kp O    &kp P    &kp BSLH
-        &kp ESC   &kp A     &kp S    &kp D    &kp F      &kp G  &none           &kp LCTRL &kp LALT &kp LGUI  &kp RCTRL           &none &kp H  &kp J  &kp K     &kp L    &kp SEMI &kp SQT
-        &kp LSHFT &kp Z     &kp X    &kp C    &kp V      &kp B                            &kp HOME &kp PG_UP                           &kp N  &kp M  &kp COMMA &kp DOT  &kp FSLH &kp RSHFT
-        &mo 2     &kp GRAVE &kp CAPS &kp LEFT &kp RIGHT                  &kp BSPC &kp DEL &kp END  &kp PG_DN &kp ENTER &kp SPACE              &kp UP &kp DOWN  &kp LBKT &kp RBKT &mo 2
+        &kp F1       &kp F2  &kp F3  &kp F4       &kp F5    &kp F6  &kp F8                                                                     &mo MOD &kp F9  &kp F10 &kp F11 &kp F12   &kp F13  &kp F14
+        &kp DELETE   &kp Q   &kp W   &lt NUMPAD F &kp P     &kp B   &kp F15                                                                    &kp F16 &kp J   &kp L   &kp U     &kp Y   &kp SEMI &kp F17
+        &kp TAB      HM_A    HM_R    HM_S         &kp T     &kp G   &kp F18            &kp ESC  &none        &none    &kp ENTER                &kp F19 &kp M   &kp N   HM_E      HM_I    HM_O     &dsq
+        &kp KP_MINUS &kp Z   &kp X   &kp C        &kp D     &kp V                               &kp PG_UP    &kp HOME                                  &kp K   &kp H   &kp COMMA &kp DOT &kp FSLH &kp UNDERSCORE
+        &td_cc       &kp F20 &kp F21 &kp LEFT     &kp RIGHT                   &kp BKSP &td_shft &kp PG_DN    &kp END  &sl SYMBOLS &kp SPACE                    &kp UP  &kp DOWN  &kp F22 &kp F23  &kp F24
       >;
     };
 
-    keypad {
-      display-name = "Kp";
+    numpad {
+      display-name = "Numpad";
       bindings = <
-        &kp EQUAL &kp N1    &kp N2   &kp N3   &kp N4     &kp N5 &trans                                                           &mo 3 &kp N6 &kp KP_NUM &kp KP_EQUAL &kp KP_DIVIDE &kp KP_MULTIPLY &kp MINUS
-        &kp TAB   &kp Q     &kp W    &kp E    &kp R      &kp T  &none                                                            &none &kp Y  &kp KP_N7  &kp KP_N8    &kp KP_N9     &kp KP_MINUS    &kp BSLH
-        &kp ESC   &kp A     &kp S    &kp D    &kp F      &kp G  &none           &kp LCTRL &kp LALT &kp LGUI  &kp RCTRL           &none &kp H  &kp KP_N4  &kp KP_N5    &kp KP_N6     &kp KP_PLUS     &kp SQT
-        &kp LSHFT &kp Z     &kp X    &kp C    &kp V      &kp B                            &kp HOME &kp PG_UP                           &kp N  &kp KP_N1  &kp KP_N2    &kp KP_N3     &kp KP_ENTER    &kp RSHFT
-        &mo 2     &kp GRAVE &kp CAPS &kp LEFT &kp RIGHT                &kp BSPC &kp DEL   &kp END  &kp PG_DN &kp ENTER &kp KP_N0              &kp UP     &kp DOWN     &kp KP_DOT    &kp RBKT        &mo 2
+        &trans &trans &trans &trans &trans &trans &trans                                           &trans &trans &trans &trans  &trans    &trans &trans
+        &trans &trans &trans &trans &trans &trans &trans                                           &trans &trans &kp N7 &kp N8  &kp N9    &trans &trans
+        &trans &trans &trans &trans &trans &trans &trans        &trans &trans &trans &trans        &trans &trans &kp N4 &kp N5  &kp N6    &trans &trans
+        &trans &trans &trans &trans &trans &trans                      &trans &trans                      &trans &kp N1 &kp N2  &kp N3    &trans &trans
+        &trans &trans &trans &trans &trans               &trans &trans &trans &trans &trans &trans               &kp N0 &kp DOT &kp EQUAL &trans &trans
       >;
     };
 
-    fn {
-      display-name = "Fn";
+    symbols {
+      display-name = "Symbols";
       bindings = <
-        &kp F1 &kp F2 &kp F3 &kp F4 &kp F5 &kp F6 &tog 1                                           &mo 3 &kp F7 &kp F8 &kp F9 &kp F10 &kp F11 &kp F12
-        &trans &trans &trans &trans &trans &trans  &none                                           &none &trans &trans &trans &trans  &trans  &trans
-        &trans &trans &trans &trans &trans &trans  &none        &trans &trans &trans &trans        &none &trans &trans &trans &trans  &trans  &trans
-        &trans &trans &trans &trans &trans &trans                      &trans &trans                     &trans &trans &trans &trans  &trans  &trans
-        &trans &trans &trans &trans &trans               &trans &trans &trans &trans &trans &trans              &trans &trans &trans  &trans  &trans
+        &trans &trans      &trans          &trans    &trans        &trans       &trans                                           &trans &trans &trans &trans &trans &trans &trans
+        &trans &kp PERCENT &kp AT          &td_cbr   &kp DOLLAR    &kp PIPE     &trans                                           &trans &trans &trans &trans &trans &trans &trans
+        &trans &kp HASH    &kp TILDE       &td_prn   &td_ce        &kp PLUS     &trans        &trans &trans &trans &trans        &trans &trans &trans &trans &trans &trans &trans
+        &trans &kp CARET   &kp EXCLAMATION &td_bkt   &kp AMPERSAND &kp ASTERISK                      &trans &trans                      &trans &trans &trans &trans &trans &trans
+        &trans &trans      &arrow          &kp SLASH &kp GRAVE                         &trans &trans &trans &trans &trans &trans               &trans &trans &trans &trans &trans
       >;
     };
 
