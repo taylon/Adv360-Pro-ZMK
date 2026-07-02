@@ -110,12 +110,22 @@
       bindings = <&kp LEFT_BRACKET>, <&kp RIGHT_BRACKET>;
     };
 
+    skq: sticky_key_quick_release {
+      compatible = "zmk,behavior-sticky-key";
+      label = "STICKY_KEY_QUICK_RELEASE";
+      #binding-cells = <1>;
+      bindings = <&kp>;
+      release-after-ms = <1000>;
+      quick-release;
+      ignore-modifiers;
+    };
+
     td_shft: tap_dance_shift {
       compatible = "zmk,behavior-tap-dance";
       label = "TAP_DANCE_SHIFT";
       #binding-cells = <0>;
       tapping-term-ms = <200>;
-      bindings = <&sk LEFT_SHIFT>, <&caps_word>;
+      bindings = <&skq LEFT_SHIFT>, <&caps_word>;
     };
 	};
 
