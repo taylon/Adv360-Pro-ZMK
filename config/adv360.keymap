@@ -78,14 +78,6 @@
       mods = <MOD_LSFT>;
     };
 
-    td_ce: tap_dance_colon_equal {
-      compatible = "zmk,behavior-tap-dance";
-      label = "TAP_DANCE_COLON_EQUAL";
-      #binding-cells = <0>;
-      tapping-term-ms = <200>;
-      bindings = <&kp EQUAL>, <&colon_equal>;
-    };
-
     td_cc: tap_dance_copy_cut {
       compatible = "zmk,behavior-tap-dance";
       label = "TAP_DANCE_COPY_CUT";
@@ -155,11 +147,11 @@
     symbols {
       display-name = "Symbols";
       bindings = <
-        &trans &trans      &trans          &trans    &trans        &trans       &trans                                           &trans &trans &trans &trans &trans &trans &trans
-        &trans &kp PERCENT &kp AT          &td_cbr   &kp DOLLAR    &kp PIPE     &trans                                           &trans &trans &trans &trans &trans &trans &trans
-        &trans &kp HASH    &kp TILDE       &td_prn   &td_ce        &kp PLUS     &trans        &trans &trans &trans &trans        &trans &trans &trans &trans &trans &trans &trans
-        &trans &kp CARET   &kp EXCLAMATION &td_bkt   &kp AMPERSAND &kp ASTERISK                      &trans &trans                      &trans &trans &trans &trans &trans &trans
-        &trans &trans      &arrow          &kp SLASH &kp GRAVE                         &trans &trans &trans &trans &trans &trans               &trans &trans &trans &trans &trans
+        &trans &trans      &colon_equal    &trans        &trans        &trans       &trans                                           &trans &trans &trans &trans &trans &trans &trans
+        &trans &kp PERCENT &kp AT          &td_cbr       &kp DOLLAR    &kp PIPE     &trans                                           &trans &trans &trans &trans &trans &trans &trans
+        &trans &kp HASH    &kp TILDE       &td_prn       &kp EQUAL     &kp PLUS     &trans        &trans &trans &trans &trans        &trans &trans &trans &trans &trans &trans &trans
+        &trans &kp CARET   &kp EXCLAMATION &td_bkt       &kp AMPERSAND &kp ASTERISK                      &trans &trans                      &trans &trans &trans &trans &trans &trans
+        &trans &trans      &arrow          &kp BACKSLASH &kp GRAVE                         &trans &trans &trans &trans &trans &trans               &trans &trans &trans &trans &trans
       >;
     };
 
